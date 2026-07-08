@@ -1,8 +1,9 @@
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from sqlalchemy import text
+from sqlalchemy.orm import Session
 
 from app.core.config import settings
-from app.db.database import SessionLocal
+from app.db.session import get_db
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -20,21 +21,10 @@ def root():
 
 
 @app.get("/health")
-def health():
-    try:
-        db = SessionLocal()
+def health(db: Session = Depends(get_db)):
+    db.execute(text("SELECT 1"))
 
-        db.execute(text("SELECT 1"))
-
-        db.close()
-
-        return {
-            "status": "healthy",
-            "database": "connected",
-        }
-
-    except Exception as e:
-        return {
-            "status": "unhealthy",
-            "database": str(e),
-        }
+    return {
+        "status": "healthy",
+        "database": "connected",
+    }
