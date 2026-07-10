@@ -37,17 +37,27 @@ class Resume(BaseModel):
 
     title: Mapped[str] = mapped_column(
         String(255),
-        nullable=False,
-    )
+    nullable=False,
+)
 
     file_name: Mapped[str] = mapped_column(
         String(255),
         nullable=False,
     )
 
+
     file_path: Mapped[str] = mapped_column(
         String(500),
         nullable=False,
+    )
+
+    file_type: Mapped[str] = mapped_column(
+        String(50),
+        nullable=False,
+    )
+
+    extracted_text: Mapped[str | None] = mapped_column(
+        nullable=True,
     )
 
     is_default: Mapped[bool] = mapped_column(
@@ -65,9 +75,9 @@ class Resume(BaseModel):
     )
 
     resume_skills: Mapped[list["ResumeSkill"]] = relationship(
-    back_populates="resume",
-    cascade="all, delete-orphan",
-)
+        back_populates="resume",
+        cascade="all, delete-orphan",
+    )
 
     job_applications: Mapped[list["JobApplication"]] = relationship(
         back_populates="resume",
@@ -75,6 +85,6 @@ class Resume(BaseModel):
     )
 
     job_matches: Mapped[list["JobMatch"]] = relationship(
-    back_populates="resume",
-    cascade="all, delete-orphan",
-)
+        back_populates="resume",
+        cascade="all, delete-orphan",
+    )

@@ -373,3 +373,260 @@ Once everything works:
 git add .
 git commit -m "feat(api): initialize FastAPI backend"
 git push origin main
+
+
+
+### Phase 4.3 - SQLAlchemy Connection
+
+Completed:
+- Created SQLAlchemy engine
+- Configured session factory
+- Created Declarative Base
+- Connected FastAPI to PostgreSQL
+- Added `/health` endpoint
+- Verified database connectivity using `SELECT 1`
+What Comes Next?
+
+Once /health is working, we'll move to Sprint 4.4, where we'll initialize Alembic.
+
+This is an exciting step because from then on, you'll never manually create database tables again. Every schema change will be version-controlled and managed through migrations—exactly how professional teams work.
+
+One Small Improvement
+
+From this sprint onward, I'd also like to introduce a CHANGELOG.md at the root of the project. The README tells the story of the project, while the changelog records version-by-version changes. It's a common practice in open-source and production projects and will make your repository even more polished.
+
+For now, complete the /health endpoint. Once you get the expected JSON response, send me:
+
+The JSON output from http://localhost:8000/health.
+Any SQL logs that appear in the terminal (because echo=True is enabled).
+
+🧠 What You Learned in Sprint 4.4
+
+You introduced one of FastAPI's core design patterns:
+
+Dependency Injection with Depends
+A reusable get_db() session provider
+Automatic resource cleanup using yield and finally
+Cleaner, more maintainable endpoint code
+
+These patterns will be reused throughout the project—for database access today, and later for authentication, AI clients, and configuration.
+
+⏸️ Stop Here
+
+After you've completed these steps, let me know:
+
+✅ Does /health still return "database": "connected"?
+✅ Did main.py work without any import or runtime errors?
+
+### Phase 4.5 - Alembic Initialization
+
+in the backend folder run this command
+ - alembic init alembic
+Completed:
+- Initialized Alembic
+- Created migration environment
+- Created migrations folder
+- Generated alembic.ini
+- Verified migration structure
+
+Outcome:
+The project is now ready for version-controlled database schema migrations.
+
+
+🚀 Sprint 5 Begins
+
+This is where the project starts becoming an AI Career Agent instead of just infrastructure.
+
+Before writing any SQLAlchemy models, we need to design the database.
+
+This is exactly what software architects do.
+
+Sprint 5 Goal
+
+By the end of Sprint 5, we'll have a database like this:
+
+                 User
+                   │
+         ┌─────────┴─────────┐
+         │                   │
+      Resume          JobApplication
+         │                   │
+         └──────────┐   ┌────┘
+                    ▼   ▼
+                   Job
+                    │
+                    ▼
+                 Company
+                    │
+                    ▼
+                JobMatch
+Why Design First?
+
+Suppose we start coding immediately.
+
+After two weeks, we realize:
+
+A job can have multiple skills.
+A user can have multiple resumes.
+One company has many jobs.
+
+Changing the database later becomes painful.
+
+Professional teams spend time designing first because it avoids expensive refactoring.
+
+Sprint 5 Roadmap
+
+We'll divide it into four phases.
+
+Phase 5.1 – Database Design
+
+We'll decide:
+
+Which tables do we need?
+What columns belong in each?
+Relationships
+Indexes
+Constraints
+
+No coding yet.
+
+Phase 5.2 – SQLAlchemy Models
+
+Convert the design into Python classes.
+
+Example:
+
+class Job(Base):
+    ...
+Phase 5.3 – Alembic Migration
+
+Generate the first migration:
+
+alembic revision --autogenerate -m "Initial schema"
+Phase 5.4 – Apply Migration
+alembic upgrade head
+
+At that point, PostgreSQL will contain all our tables.
+
+My Proposed Database
+
+For our AI Career Agent, I recommend these core tables:
+
+Table	Purpose
+users	User profile and preferences
+resumes	Multiple resume versions
+companies	Company information
+jobs	Jobs collected from LinkedIn, Naukri, etc.
+job_applications	Track every application
+skills	Master list of skills
+job_matches	AI-generated resume/job match scores
+
+This design supports the features you've planned:
+
+LinkedIn scraping
+Naukri scraping
+Resume tailoring
+Cover letter generation
+Automated applications
+Application tracking
+AI scoring
+One Architectural Improvement
+
+Before Sprint 5.1, I'd like to add something that many tutorials skip but professional projects include:
+
+docs/
+├── architecture.md
+├── database.md
+├── api.md
+└── roadmap.md
+
+We'll document our architecture as we build it. This has two benefits:
+
+You'll always have a clear reference for how the system is designed.
+If this becomes an open-source project or you collaborate with others, the documentation will already be in place.
+📈 Overall Progress
+Infrastructure          ████████████████████ 100%
+
+Backend Foundation      ████████████████████ 100%
+
+Database Design         ░░░░░░░░░░░░░░░░░░░   0%
+
+Business Logic          ░░░░░░░░░░░░░░░░░░░   0%
+
+AI Layer                ░░░░░░░░░░░░░░░░░░░   0%
+
+Automation              ░░░░░░░░░░░░░░░░░░░   0%
+
+Dashboard               ░░░░░░░░░░░░░░░░░░░   0%
+
+
+Sprint 5 Roadmap (Updated)
+
+Instead of rushing into models, here's how I'd like us to proceed:
+
+Sprint 5.1 (Current Sprint)
+✅ Design the database
+✅ Define relationships
+✅ Create docs/database.md
+🔄 Expand the document with columns, data types, enums, and ER diagram
+Sprint 5.2
+Create SQLAlchemy models
+Add relationships (ForeignKey, relationship)
+Create a shared BaseModel for common fields like id, created_at, and updated_at
+Sprint 5.3
+Configure Alembic
+Generate the initial migration
+Review the generated SQL
+Sprint 5.4
+Apply the migration
+Verify all tables in PostgreSQL
+Add seed data (a few skills and statuses)
+One Last Recommendation
+
+I'd also like to create a docs/architecture.md before we write models.
+
+We'll capture:
+
+Overall system architecture
+Backend components
+Scraper pipeline
+AI pipeline
+Database interactions
+
+As the project grows, this document will become invaluable—not just for us, but for anyone else who looks at the repository.
+
+## Sprint Progress
+
+- ✅ Sprint 1 – Project Initialization
+- ✅ Sprint 2 – Docker & PostgreSQL
+- ✅ Sprint 3 – Backend Setup
+- ✅ Sprint 4 – FastAPI & Database Connection
+- ✅ Sprint 5.1 – Database Design
+- ✅ Sprint 5.2 – SQLAlchemy Models
+
+
+## Sprint 5.3 - Alembic Database Migrations
+
+### Goal
+
+Manage PostgreSQL schema changes using Alembic.
+
+### Tasks
+
+- Initialize Alembic
+- Configure database connection
+- Generate migrations
+- Apply migrations
+- Track schema changes
+
+## Sprint 5 – Database Layer
+
+### Completed
+
+- Designed normalized database schema
+- Implemented SQLAlchemy ORM models
+- Created reusable BaseModel
+- Configured Alembic
+- Generated initial migration
+- Applied migration to PostgreSQL
+- Verified all tables successfully

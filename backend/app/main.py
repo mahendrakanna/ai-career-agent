@@ -5,6 +5,8 @@ from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.db.session import get_db
 
+from app.api.v1 import api_router
+
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
@@ -28,3 +30,9 @@ def health(db: Session = Depends(get_db)):
         "status": "healthy",
         "database": "connected",
     }
+
+# app include router for API v1
+app.include_router(
+    api_router,
+    prefix="/api/v1",
+)
